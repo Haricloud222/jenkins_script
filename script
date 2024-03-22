@@ -1,0 +1,25 @@
+pipeline {
+    agent { label "projecta" }
+
+    stages {
+        stage('step 1') {
+            steps {
+                echo 'clone hello world project '
+                git branch: 'main', url: 'https://github.com/Haricloud222/Hellowold-latest1.git'
+            }
+        }
+        stage('step 2') {
+            steps {
+                echo 'build project '
+                sh 'yum install maven -y'
+                sh 'mvn clean package'
+            }
+        }
+        stage('step 3') {
+            steps {
+                echo 'deploy project'
+                deploy adapters: [tomcat8(credentialsId: 'timcat', path: '', url: 'http://13.235.90.78:8080/')], contextPath: null, war: '**/*.war'
+            }
+        } 
+    }
+}
